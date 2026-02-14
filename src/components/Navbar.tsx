@@ -10,13 +10,13 @@ export default function Navbar() {
         </div>
         <ul className="flex items-center gap-10 text-brand-white">
           <li>
-            <Link href="/">Home</Link>
+            <Link href="#hero">Home</Link>
           </li>
           <li>
-            <Link href="/about">About</Link>
+            <Link href="#about">About</Link>
           </li>
           <li>
-            <Link href="/services">Services</Link>
+            <Link href="#services">Services</Link>
           </li>
           <li>
             <Link href="/contact">Contact</Link>
