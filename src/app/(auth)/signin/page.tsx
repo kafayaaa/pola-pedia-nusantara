@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { FaArrowLeft } from "react-icons/fa6";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -32,29 +34,32 @@ export default function SignInPage() {
     <main className="w-full h-screen grid grid-cols-2">
       <div
         className="relative w-full h-full bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: "url('/hero.webp')" }}
+        style={{ backgroundImage: "url('/images/hero.webp')" }}
       >
         <div className="absolute inset-0 bg-brand-black/50"></div>
         <div className="w-1/2 flex flex-col items-center gap-5 p-10 bg-brand-white/10 border border-brand-white/50 rounded-3xl backdrop-blur-sm shadow-md z-10">
-          <Image src="/ppn.webp" alt="Logo" width={200} height={200} />
+          <Image src="/logo.webp" alt="Logo" width={200} height={200} />
           <h1 className="text-4xl font-black text-brand-white tracking-wider uppercase text-center leading-tight">
             Pola Pedia <br /> Nusantara
           </h1>
         </div>
       </div>
 
-      <div className="w-full h-full flex items-center justify-center bg-white">
+      <div className="relative w-full h-full flex items-center justify-center bg-white">
+        <div className="absolute top-5 right-5">
+          <Link href="/">
+            <FaArrowLeft className="text-2xl text-brand-medium-gray hover:text-brand-dark-red transition-all duration-300" />
+          </Link>
+        </div>
         <form
           onSubmit={handleSignIn}
           className="w-1/2 p-10 flex flex-col items-center gap-5 rounded-3xl shadow-xl border border-gray-100"
         >
-          <h1 className="text-3xl font-black uppercase italic tracking-tighter">
-            Sign In
-          </h1>
+          <h1 className="text-3xl font-black uppercase">Sign In</h1>
 
           <div className="w-full space-y-4">
             <div className="flex flex-col gap-2">
-              <label htmlFor="email" className="font-bold text-sm uppercase">
+              <label htmlFor="email" className="text-sm uppercase">
                 Email
               </label>
               <input
@@ -68,7 +73,7 @@ export default function SignInPage() {
               />
             </div>
             <div className="flex flex-col gap-2 w-full">
-              <label htmlFor="password" className="font-bold text-sm uppercase">
+              <label htmlFor="password" className="text-sm uppercase">
                 Password
               </label>
               <input

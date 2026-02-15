@@ -45,22 +45,34 @@ export default function HorizontalServices() {
             ref={sectionRef}
             className="flex flex-row w-[400vw] h-screen relative"
           >
-            <ServiceCard title="Menemukan Jalan" image="/searching.webp">
+            <ServiceCard
+              title="Menemukan Jalan"
+              image="/illustrations/searching.webp"
+            >
               Kami menganalisis ekosistem bisnis Anda untuk menemukan celah
               inovasi yang belum terjamah. Bukan sekadar rencana, tapi peta
               jalan strategis untuk dominasi pasar.
             </ServiceCard>
-            <ServiceCard title="Membangun Identitas" image="/designing.webp">
+            <ServiceCard
+              title="Membangun Identitas"
+              image="/illustrations/designing.webp"
+            >
               Kami menciptakan wajah digital yang berkarakter. Dari desain UI/UX
               yang intuitif hingga identitas brand yang kuat, kami memastikan
               Anda tampil Berbeda di mata audiens.
             </ServiceCard>
-            <ServiceCard title="Eksekusi Presisi" image="/development.webp">
+            <ServiceCard
+              title="Eksekusi Presisi"
+              image="/illustrations/development.webp"
+            >
               Mengubah ide kompleks menjadi infrastruktur digital yang tangguh.
               Kami membangun website dan aplikasi yang cepat, aman, dan siap
               tumbuh bersama skala bisnis Anda.
             </ServiceCard>
-            <ServiceCard title="Akselerasi Dampak" image="/optimization.webp">
+            <ServiceCard
+              title="Akselerasi Dampak"
+              image="/illustrations/optimization.webp"
+            >
               Eksplorasi tidak berhenti setelah peluncuran. Kami mengoptimalkan
               performa digital Anda melalui data dan teknologi untuk memastikan
               hasil yang nyata dan berkelanjutan.

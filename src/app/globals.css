@@ -5,8 +5,9 @@
   --color-brand-dark-red: #9b2b2a;
   --color-brand-light-red: #df463a;
   --color-brand-dark-gray: #495057;
+  --color-brand-medium-gray: #b5b5b5;
   --color-brand-light-gray: #dee2e6;
-  --color-brand-white: #fdfffc;
+  --color-brand-white: #f8f9fa;
   --color-brand-black: #0a0908;
 
   --font-sans: var(--font-jakarta);

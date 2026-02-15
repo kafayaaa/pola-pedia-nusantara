@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import CTAButton from "@/components/CTAButton";
 import HorizontalServices from "@/components/HorizontalServices";
@@ -12,7 +11,7 @@ export default function Home() {
       <section
         id="hero"
         className="relative w-full h-screen bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/hero.webp')" }}
+        style={{ backgroundImage: "url('images/hero.webp')" }}
       >
         <div className="absolute inset-0 bg-brand-black/50"></div>
         <div className="relative z-10 w-full max-w-7xl mx-auto h-full flex flex-col items-start justify-center gap-10">
