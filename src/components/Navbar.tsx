@@ -8,7 +8,7 @@ export default function Navbar() {
       <div className="w-full max-w-7xl mx-auto flex justify-between items-center">
         <div className="max-w-40">
           <Link href="/#hero">
-            <Image src="/ppn.webp" alt="Logo" width={40} height={40} />
+            <Image src="/logo.webp" alt="Logo" width={40} height={40} />
           </Link>
         </div>
         <ul className="flex items-center gap-10 text-brand-white">

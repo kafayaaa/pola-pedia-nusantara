@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "PT Pola Pedia Nusantara",
   description: "Eksplorasi Potensi Tanpa Batas Bersama Kami",
   icons: {
-    icon: "/ppn.webp",
+    icon: "/logo.webp",
   },
 };
 

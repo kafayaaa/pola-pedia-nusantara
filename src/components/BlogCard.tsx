@@ -1,0 +1,39 @@
+import Image from "next/image";
+
+interface BlogCardProps {
+  title: string;
+  image: string;
+  author: string;
+  createdAt: string;
+  desc: string;
+}
+
+export default function BlogCard({
+  title,
+  image,
+  author,
+  createdAt,
+  desc,
+}: BlogCardProps) {
+  return (
+    <div className="w-full p-5 flex items-center gap-5 rounded-lg bg-white shadow-md">
+      <div className="">
+        <Image
+          src={image}
+          alt={title}
+          width={200}
+          height={200}
+          className="aspect-square size-40 object-cover"
+        />
+      </div>
+      <div className="flex flex-col gap-3">
+        <h1 className="text-xl font-bold">{title}</h1>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-bold">{author}</p>
+          <p className="text-sm text-gray-500">{createdAt}</p>
+        </div>
+        <p className="text-sm text-gray-500">{desc}</p>
+      </div>
+    </div>
+  );
+}
