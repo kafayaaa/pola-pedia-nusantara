@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@plugin "@tailwindcss/typography";
+
 @theme inline {
   /* Theme Colors */
   --color-brand-dark-red: #9b2b2a;
@@ -24,4 +26,19 @@ body {
   background: var(--color-brand-white);
   color: var(--color-brand-black);
   font-family: var(--font-jakarta);
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+.prose blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  font-style: italic;
+  color: #4b5563;
 }

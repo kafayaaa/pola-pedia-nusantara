@@ -15,6 +15,9 @@ export default function BlogCard({
   createdAt,
   desc,
 }: BlogCardProps) {
+  const plainText = desc
+    ? desc.replace(/<[^>]*>?/gm, "").substring(0, 150) + "..."
+    : "";
   return (
     <div className="w-full p-5 flex items-center gap-5 rounded-lg bg-white shadow-md">
       <div className="">
@@ -30,9 +33,15 @@ export default function BlogCard({
         <h1 className="text-xl font-bold">{title}</h1>
         <div className="flex flex-col gap-1">
           <p className="text-sm font-bold">{author}</p>
-          <p className="text-sm text-gray-500">{createdAt}</p>
+          <p className="text-sm text-gray-500">
+            {new Date(createdAt).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
-        <p className="text-sm text-gray-500">{desc}</p>
+        <p className="text-sm text-gray-500">{plainText}</p>
       </div>
     </div>
   );
