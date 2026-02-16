@@ -69,7 +69,7 @@ export default function SimpleEditor({
     editorProps: {
       attributes: {
         class:
-          "prose prose-neutral max-w-none focus:outline-none min-h-[400px] p-6 font-serif",
+          "prose prose-neutral max-w-none focus:outline-none min-h-[400px] p-6",
       },
     },
     onUpdate: ({ editor }) => {
@@ -222,7 +222,7 @@ export default function SimpleEditor({
           active={editor.isActive("link")}
           icon={<LinkIcon size={18} />}
         />
-        <MenuButton onClick={addImage} icon={<ImageIcon size={18} />} />{" "}
+        {/* <MenuButton onClick={addImage} icon={<ImageIcon size={18} />} />{" "} */}
         <Divider />
         <MenuButton
           onClick={() => editor.chain().focus().setTextAlign("left").run()}

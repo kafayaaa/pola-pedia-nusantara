@@ -1,36 +1,68 @@
 "use client";
 
-import { useState, DragEvent, useRef, useEffect } from "react";
+import { useState, useEffect, useRef, DragEvent } from "react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import SimpleEditor from "@/components/SimpleEditor";
-import { Image as ImageIcon, Loader2 } from "lucide-react";
+import { Image as ImageIcon, Loader2, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-export default function CreateBlogPage() {
+export default function EditBlogPage() {
   const router = useRouter();
+  const { id } = useParams();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [oldImageUrl, setOldImageUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const adjustHeight = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-  };
+  useEffect(() => {
+    const fetchOldData = async () => {
+      const { data, error } = await supabase
+        .from("blogs")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCoverFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
+      if (error || !data) {
+        alert("Blog tidak ditemukan");
+        router.push("/admin/blogs");
+        return;
+      }
+
+      setTitle(data.title);
+      setContent(data.content);
+      setPreviewUrl(data.image_url);
+      setOldImageUrl(data.image_url);
+      setIsLoadingData(false);
+    };
+
+    if (id) fetchOldData();
+  }, [id, router]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [title]);
+
+  const getFilePathFromUrl = (url: string) => {
+    try {
+      const urlObj = new URL(url);
+      const pathParts = urlObj.pathname.split("blog-images/");
+      if (pathParts.length > 1) {
+        return decodeURIComponent(pathParts[1].split("?")[0]);
+      }
+      return null;
+    } catch (e) {
+      return null;
     }
   };
 
@@ -59,25 +91,20 @@ export default function CreateBlogPage() {
     handleFiles(e.dataTransfer.files);
   };
 
-  const handlePublish = async () => {
-    if (!title || !content) {
-      return alert("Judul dan konten tidak boleh kosong!");
-    }
-
+  const handleUpdate = async () => {
     setIsSubmitting(true);
-
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Anda harus login untuk memposting.");
-
-      let finalImageUrl = "";
+      let finalImageUrl = previewUrl;
 
       if (coverFile) {
+        if (oldImageUrl && oldImageUrl.includes("supabase.co")) {
+          const oldFilePath = getFilePathFromUrl(oldImageUrl);
+          if (oldFilePath) {
+            await supabase.storage.from("blog-images").remove([oldFilePath]);
+          }
+        }
         const fileExt = coverFile.name.split(".").pop();
         const fileName = `covers/${Date.now()}.${fileExt}`;
-
         const { error: uploadError } = await supabase.storage
           .from("blog-images")
           .upload(fileName, coverFile);
@@ -91,24 +118,25 @@ export default function CreateBlogPage() {
         finalImageUrl = urlData.publicUrl;
       }
 
-      const slug = title
+      const newSlug = title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)+/g, "");
 
-      const { error: insertError } = await supabase.from("blogs").insert({
-        title,
-        slug,
-        content,
-        image_url: finalImageUrl,
-        author_id: user.id,
-        is_published: true,
-      });
+      const { error: updateError } = await supabase
+        .from("blogs")
+        .update({
+          title,
+          content,
+          image_url: finalImageUrl,
+          slug: newSlug,
+        })
+        .eq("id", id);
 
-      if (insertError) throw insertError;
+      if (updateError) throw updateError;
 
-      alert("Blog berhasil dipublikasikan!");
-      router.push("/admin/blogs");
+      alert("Blog berhasil diperbarui!");
+      router.push(`/admin/blogs/${newSlug}`);
       router.refresh();
     } catch (error: any) {
       alert(error.message);
@@ -117,23 +145,26 @@ export default function CreateBlogPage() {
     }
   };
 
-  useEffect(() => {
-    adjustHeight();
-  }, [title]);
+  if (isLoadingData)
+    return <div className="p-20 text-center">Loading data...</div>;
 
   return (
-    <div className="min-h-screen bg-brand-white pb-20">
-      <div className="sticky top-0 z-50 bg-brand-white/10 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
-        <span className="text-sm font-medium text-gray-400">
-          Drafting New Post
-        </span>
+    <div className="min-h-screen bg-white pb-20">
+      <div className="sticky top-0 z-50 bg-white/10 backdrop-blur-md px-6 py-4 flex justify-between items-center">
+        <Link
+          href="/admin/blogs"
+          className="flex items-center gap-2 text-gray-500 hover:text-black transition-colors"
+        >
+          <ArrowLeft size={20} />
+          <span className="font-medium text-sm">Back</span>
+        </Link>
         <button
-          onClick={handlePublish}
+          onClick={handleUpdate}
           disabled={isSubmitting}
-          className="bg-brand-light-red text-white px-6 py-2 rounded-full font-bold hover:brightness-110 disabled:opacity-50 flex items-center gap-2"
+          className="bg-black text-white px-6 py-2 rounded-full font-bold hover:bg-gray-800 disabled:opacity-50 flex items-center gap-2"
         >
           {isSubmitting && <Loader2 className="animate-spin" size={18} />}
-          {isSubmitting ? "Publishing..." : "Publish"}
+          {isSubmitting ? "Saving..." : "Update Post"}
         </button>
       </div>
 
@@ -182,19 +213,24 @@ export default function CreateBlogPage() {
               type="file"
               className="hidden"
               accept="image/*"
-              onChange={(e) => handleFiles(e.target.files)}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setCoverFile(file);
+                  setPreviewUrl(URL.createObjectURL(file));
+                }
+              }}
             />
           </label>
         </div>
 
         <textarea
           ref={textareaRef}
-          placeholder="Judul"
-          rows={1}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full text-5xl font-bold placeholder:text-gray-200 outline-none mb-6 resize-none border-none focus:ring-0 overflow-hidden min-h-[60px]"
-          style={{ lineHeight: "1.2" }}
+          placeholder="Title"
+          className="w-full text-5xl font-bold font-serif outline-none mb-6 resize-none overflow-hidden"
+          rows={1}
         />
 
         <SimpleEditor content={content} onChange={setContent} />
