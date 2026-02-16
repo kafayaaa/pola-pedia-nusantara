@@ -8,7 +8,7 @@ export default function AdminLayout({
   return (
     <main className="w-full min-h-screen flex">
       <Sidebar />
-      {children}
+      <div className="ml-48 w-full">{children}</div>
     </main>
   );
 }

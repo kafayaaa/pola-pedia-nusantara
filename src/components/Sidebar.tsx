@@ -6,7 +6,7 @@ import SidebarButton from "./SidebarButton";
 
 export default function Sidebar() {
   return (
-    <nav className="w-48 h-screen px-5 py-8 flex flex-col justify-between items-center border-r border-brand-medium-gray">
+    <nav className="fixed top-0 left-0 z-10 bg-brand-white w-48 h-screen px-5 py-8 flex flex-col justify-between items-center border-r border-brand-medium-gray">
       <div className="flex flex-col items-center gap-8">
         <Image src="/logo.webp" alt="Logo" width={50} height={50} />
         <div className="flex flex-col gap-2">

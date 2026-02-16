@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth overflow-y-scroll">
       <body className={`${jakarta.variable} antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface BlogCardProps {
   title: string;
@@ -6,6 +7,7 @@ interface BlogCardProps {
   author: string;
   createdAt: string;
   desc: string;
+  slug: string;
 }
 
 export default function BlogCard({
@@ -14,12 +16,16 @@ export default function BlogCard({
   author,
   createdAt,
   desc,
+  slug,
 }: BlogCardProps) {
   const plainText = desc
     ? desc.replace(/<[^>]*>?/gm, "").substring(0, 150) + "..."
     : "";
   return (
-    <div className="w-full p-5 flex items-center gap-5 rounded-lg bg-white shadow-md">
+    <Link
+      href={`/admin/blogs/${slug}`}
+      className="w-full p-5 flex items-center gap-5 rounded-lg bg-white shadow-md"
+    >
       <div className="">
         <Image
           src={image}
@@ -43,6 +49,6 @@ export default function BlogCard({
         </div>
         <p className="text-sm text-gray-500">{plainText}</p>
       </div>
-    </div>
+    </Link>
   );
 }
