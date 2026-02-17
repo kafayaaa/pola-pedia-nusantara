@@ -59,7 +59,7 @@ export default function BlogsPage() {
           <FaPlusCircle className="text-3xl text-brand-light-red hover:scale-110 transition-transform" />
         </Link>
       </div>
-      <div className="p-10">
+      <div className="px-10 py-5">
         <div className="flex flex-col gap-5">
           {blogs.length > 0 ? (
             blogs.map((blog) => (

@@ -123,7 +123,7 @@ export default function CreateBlogPage() {
 
   return (
     <div className="min-h-screen bg-brand-white pb-20">
-      <div className="sticky top-0 z-50 bg-brand-white/10 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+      <div className="sticky top-0 z-10 bg-brand-white/10 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
         <span className="text-sm font-medium text-gray-400">
           Drafting New Post
         </span>

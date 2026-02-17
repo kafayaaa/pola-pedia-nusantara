@@ -130,8 +130,8 @@ export default function SimpleEditor({
   };
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
-      <div className="flex flex-wrap items-center gap-0.5 p-2 border-b border-gray-100 bg-gray-50/50">
+    <div className="relative border border-gray-200 rounded-xl bg-white shadow-sm">
+      <div className="sticky top-18 z-30 flex flex-wrap items-center gap-0.5 p-2 border-b border-gray-100 bg-gray-50 rounded-xl">
         <MenuButton
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().chain().focus().undo().run()}
