@@ -1,24 +1,9 @@
 "use client";
 import DashboardCard from "@/components/DashboardCard";
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { IoNewspaper } from "react-icons/io5";
 import { PiEyesFill } from "react-icons/pi";
 
 export default function DashboardPage() {
-  const { profile, loading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !profile) {
-      router.push("/signin");
-    }
-  }, [profile, loading, router]);
-
-  if (loading) return <p>Loading...</p>;
-  if (!profile) return null;
-
   return (
     <div className="w-full min-h-screen">
       <div className="sticky top-0 z-10 px-10 py-8 w-full flex items-center justify-between bg-brand-white/10 backdrop-blur-sm">

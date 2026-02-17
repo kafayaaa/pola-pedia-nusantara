@@ -7,6 +7,8 @@ import { BsPersonCircle } from "react-icons/bs";
 import Image from "next/image";
 import { ProfileInput } from "@/components/ProfileInput";
 import { supabase } from "@/lib/supabase";
+import { BiLogOutCircle } from "react-icons/bi";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { profile, user, loading, refreshProfile } = useAuth();
@@ -14,6 +16,9 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const router = useRouter();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -84,6 +89,24 @@ export default function ProfilePage() {
       alert("Gagal memperbarui profil: " + error.message);
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    const confirmLogout = confirm("Apakah Anda yakin ingin keluar?");
+    if (!confirmLogout) return;
+
+    setIsLoggingOut(true);
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) throw error;
+      router.replace("/signin");
+      router.refresh();
+    } catch (error: any) {
+      alert("Error logging out: " + error.message);
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -179,6 +202,20 @@ export default function ProfilePage() {
           type="email"
           disabled={true}
         />
+        <div className="w-full max-w-lg mx-auto flex justify-end mt-10">
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="flex items-center gap-2 px-6 py-2 rounded-full bg-brand-light-red hover:bg-brand-light-red/80 text-white font-bold"
+          >
+            {isLoggingOut ? (
+              <TbLoader2 className="text-2xl animate-spin" />
+            ) : (
+              <BiLogOutCircle className="text-2xl" />
+            )}
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </button>
+        </div>
       </div>
     </div>
   );
