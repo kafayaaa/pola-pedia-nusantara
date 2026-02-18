@@ -17,9 +17,21 @@ export async function middleware(request: NextRequest) {
           return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
+          request.cookies.set({ name, value, ...options });
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
           response.cookies.set({ name, value, ...options });
         },
         remove(name: string, options: CookieOptions) {
+          request.cookies.set({ name, value: "", ...options });
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
+          });
           response.cookies.set({ name, value: "", ...options });
         },
       },
@@ -27,10 +39,9 @@ export async function middleware(request: NextRequest) {
   );
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  if (!session && request.nextUrl.pathname.startsWith("/admin")) {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user && request.nextUrl.pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
 
@@ -38,5 +49,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/signin"],
 };
