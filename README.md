@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://via.placeholder.com/150/FF4B4B/FFFFFF?text=PN" alt="Polapedia Logo" width="120" />
+  <img src="" alt="Polapedia Logo" width="120" />
   <h1>Polapedia Nusantara</h1>
   <p>A Modern Blog CMS Platform built with Next.js 15 and Supabase for dynamic and responsive content management.</p>
 
@@ -58,18 +58,21 @@ Follow these steps to run the project in your local environment:
    ```bash
    npm run dev
 Open http://localhost:3000 to see the result.
-🏗️ Project Architecture
-/app - Next.js App Router (Pages, API Routes, Layouts).
 
-/components - Reusable UI components (Editor, UI Elements).
+### 🏗️ Project Architecture
 
-/lib - Supabase Client configuration (Singleton pattern).
+- /app - Next.js App Router (Pages, API Routes, Layouts).
 
-/contexts - AuthContext for global user state management.
+- /components - Reusable UI components (Editor, UI Elements).
 
-/public - Static assets (Logos, Placeholders).
+- /lib - Supabase Client configuration (Singleton pattern).
 
-🛡️ Security
+- /contexts - AuthContext for global user state management.
+
+- /public - Static assets (Logos, Placeholders).
+
+### 🛡️ Security
+
 This project implements Row Level Security (RLS) on both the database and storage to ensure:
 
 The public can only read published blogs (is_published = true).
@@ -78,7 +81,8 @@ Only authenticated users can upload images and create new posts.
 
 Authors can only edit or delete blogs that they own.
 
-📄 License
+### 📄 License
+
 This project is licensed under the MIT License.
 
 <div align="center">
