@@ -22,7 +22,7 @@ export default function Sidebar() {
     <>
       <nav className="hidden md:flex fixed top-0 left-0 z-40 bg-brand-white w-48 h-screen px-5 py-8 flex-col justify-between items-center border-r border-brand-medium-gray">
         <div className="flex flex-col items-center gap-8 w-full">
-          <Link href="/">
+          <Link href="/admin/dashboard">
             <Image
               src="/logo.webp"
               alt="Logo"
