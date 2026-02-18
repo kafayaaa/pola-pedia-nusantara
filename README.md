@@ -3,7 +3,6 @@
   <img src="./public/logo.webp" alt="ShutterUp Logo" width="150" style="margin-bottom: 10px;">
   <h1 style="border-bottom: none; margin-bottom: 20px;">Pola Pedia Nusantara</h1>
 </div>
-  <h1>Polapedia Nusantara</h1>
   <p>A Modern Blog CMS Platform built with Next.js 15 and Supabase for dynamic and responsive content management.</p>
 
   <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js" />
