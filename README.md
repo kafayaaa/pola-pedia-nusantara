@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <img src="https://via.placeholder.com/150/FF4B4B/FFFFFF?text=PN" alt="Polapedia Logo" width="120" />
+  <h1>Polapedia Nusantara</h1>
+  <p>A Modern Blog CMS Platform built with Next.js 15 and Supabase for dynamic and responsive content management.</p>
 
-## Getting Started
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Supabase-BaaS-green?style=for-the-badge&logo=supabase" alt="Supabase" />
+  <img src="https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-Styling-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Vercel-Deployed-black?style=for-the-badge&logo=vercel" alt="Vercel" />
+</div>
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 📖 Project Description
+**Polapedia Nusantara** is an internal blog management system designed for speed and ease of use. This platform allows administrators to publish news, manage content via a Rich Text Editor, and handle image assets efficiently through integrated cloud storage.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### ✨ Key Features
+- 🔒 **Secure Authentication**: Full integration with Supabase Auth for secure admin session management.
+- 📝 **Rich Text Editor**: An interactive writing experience featuring a *SimpleEditor* and automatic slug generation.
+- 🖼️ **Cloud Storage**: Upload blog covers directly to Supabase Storage with strict RLS (Row Level Security) policies.
+- 🚀 **Server-Side Rendering (SSR)**: Leveraging Next.js App Router for optimal SEO performance and page load speeds.
+- 📱 **Mobile Ready**: Fully responsive design tailored for seamless access across all devices.
+- 🎭 **Smooth Animations**: Engaging UI interactions powered by GSAP (GreenSock Animation Platform).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🛠️ Tech Stack
+- **Framework**: Next.js 15 (App Router - Fullstack)
+- **Database & Auth**: Supabase (PostgreSQL)
+- **Storage**: Supabase Storage Buckets
+- **Styling**: Tailwind CSS
+- **Animations**: GSAP
+- **Icons**: Lucide React & FontAwesome
+- **Language**: TypeScript
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🚀 Getting Started
 
-## Learn More
+Follow these steps to run the project in your local environment:
 
-To learn more about Next.js, take a look at the following resources:
+#### Prerequisites
+- Node.js (v18 or higher)
+- npm / yarn / pnpm
+- A Supabase Project account
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Installation & Setup
+1. **Clone the Repository**:
+   ```bash
+   git clone [https://github.com/username/polapedia-nusantara.git](https://github.com/username/polapedia-nusantara.git)
+   cd polapedia-nusantara
+2. **Install Dependencies**:
+   ```bash
+   npm install
+3. **Configure Environment Variables:**
+   Create a .env.local file in the root directory and add your Supabase credentials:
+   ```bash
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+4. **Run the development server:**
+   ```bash
+   npm run dev
+Open http://localhost:3000 to see the result.
+🏗️ Project Architecture
+/app - Next.js App Router (Pages, API Routes, Layouts).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+/components - Reusable UI components (Editor, UI Elements).
 
-## Deploy on Vercel
+/lib - Supabase Client configuration (Singleton pattern).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+/contexts - AuthContext for global user state management.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+/public - Static assets (Logos, Placeholders).
+
+🛡️ Security
+This project implements Row Level Security (RLS) on both the database and storage to ensure:
+
+The public can only read published blogs (is_published = true).
+
+Only authenticated users can upload images and create new posts.
+
+Authors can only edit or delete blogs that they own.
+
+📄 License
+This project is licensed under the MIT License.
+
+<div align="center">
+Developed with ❤️ by Polapedia Team
+</div>
+
+
+-----
+
+### Key Documentation Highlights:
+
+  * **Architecture Flow**: Clearly explains how Next.js interacts with Supabase via SSR and Client-side SDKs.
+  * **Security Focus**: Highlights the Row Level Security (RLS) setup, which is a major technical achievement of your project.
+  * **Type Safety**: Mentions TypeScript readiness, which is crucial for modern enterprise deployments.
+
+**Would you like me to add a "Troubleshooting" section specifically for the Storage RLS or Middleware setup we solved e
