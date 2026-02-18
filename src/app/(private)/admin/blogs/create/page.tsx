@@ -71,7 +71,12 @@ export default function CreateBlogPage() {
       let finalImageUrl = "";
 
       if (coverFile) {
+        console.log(
+          "Cek Client:",
+          supabase.auth.session ? "Session OK" : "No Session",
+        );
         console.log("Log 4: Uploading image...");
+        console.log("File yang diupload:", coverFile.name, coverFile.type);
         const fileExt = coverFile.name.split(".").pop();
         const fileName = `covers/${user.id}-${Date.now()}.${fileExt}`;
 
@@ -93,6 +98,7 @@ export default function CreateBlogPage() {
           .getPublicUrl(fileName);
 
         finalImageUrl = urlData.publicUrl;
+        console.log("Log 5: Upload berhasil, data:", uploadData);
       }
 
       console.log("Log 6: Inserting blog...");
