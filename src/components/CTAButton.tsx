@@ -3,6 +3,7 @@
 import { GoArrowRight } from "react-icons/go";
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import Link from "next/link";
 
 interface CTAButtonProps {
   text: string;
@@ -13,7 +14,7 @@ interface CTAButtonProps {
 
 export default function CTAButton({
   text,
-  textColor,
+  textColor = "text-white",
   bgColor = "bg-brand-white/10",
   borderColor = "border-brand-white/50",
 }: CTAButtonProps) {
@@ -54,20 +55,31 @@ export default function CTAButton({
       ease: "power2.out",
     });
   };
+
   return (
-    <button
+    <Link
+      href="/contacts"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={`overflow-hidden relative pl-6 pr-1 py-1 flex items-center gap-5 text-brand-white border rounded-full backddrop-blur-sm shadow-md ${bgColor} ${borderColor} transition-all duration-300`}
+      className={`group w-fit overflow-hidden relative pl-6 pr-1 py-1 flex items-center gap-5 border rounded-full backdrop-blur-sm shadow-md ${bgColor} ${borderColor} transition-all duration-300`}
     >
-      <div ref={bgRef} className="absolute inset-0 bg-white/20 z-0"></div>
-      <p className={`${textColor} z-10`}>{text}</p>
+      <div
+        ref={bgRef}
+        className="absolute inset-0 bg-white/20 z-0 pointer-events-none"
+      ></div>
+
+      <span
+        className={`${textColor} z-10 text-sm md:text-base font-bold relative inline-block`}
+      >
+        {text}
+      </span>
+
       <div
         ref={arrowRef}
-        className="w-10 h-10 rounded-full bg-linear-to-tr from-brand-light-red to-brand-dark-red flex items-center justify-center z-10"
+        className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-linear-to-tr from-brand-light-red to-brand-dark-red flex items-center justify-center z-10 text-white"
       >
-        <GoArrowRight className="-rotate-45" />
+        <GoArrowRight className="-rotate-45 text-xl" />
       </div>
-    </button>
+    </Link>
   );
 }

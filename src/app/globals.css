@@ -2,7 +2,7 @@
 
 @plugin "@tailwindcss/typography";
 
-@theme inline {
+@theme {
   /* Theme Colors */
   --color-brand-dark-red: #9b2b2a;
   --color-brand-light-red: #df463a;

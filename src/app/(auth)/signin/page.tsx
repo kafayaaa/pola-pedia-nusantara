@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
 
 export default function SignInPage() {
+  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -31,9 +32,9 @@ export default function SignInPage() {
   };
 
   return (
-    <main className="w-full h-screen grid grid-cols-2">
+    <main className="w-full h-screen grid grid-cols-1 md:grid-cols-2">
       <div
-        className="relative w-full h-full bg-cover bg-center flex items-center justify-center"
+        className="relative w-full h-full bg-cover bg-center flex items-center justify-center hidden md:flex"
         style={{ backgroundImage: "url('/images/hero.webp')" }}
       >
         <div className="absolute inset-0 bg-brand-black/50"></div>
@@ -53,7 +54,7 @@ export default function SignInPage() {
         </div>
         <form
           onSubmit={handleSignIn}
-          className="w-1/2 p-10 flex flex-col items-center gap-5 rounded-3xl shadow-xl border border-gray-100"
+          className="w-10/12 md:w-1/2 p-10 flex flex-col items-center gap-5 rounded-3xl shadow-xl border border-gray-100"
         >
           <h1 className="text-3xl font-black uppercase">Sign In</h1>
 

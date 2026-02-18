@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, DragEvent, useRef, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import SimpleEditor from "@/components/SimpleEditor";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
 
 export default function CreateBlogPage() {
+  const supabase = createClient();
   const router = useRouter();
 
   const [title, setTitle] = useState("");
@@ -17,6 +18,12 @@ export default function CreateBlogPage() {
   const [isDragging, setIsDragging] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const generatedSlug = title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
 
   const adjustHeight = () => {
     const textarea = textareaRef.current;
@@ -60,30 +67,40 @@ export default function CreateBlogPage() {
   };
 
   const handlePublish = async () => {
-    if (!title || !content) {
-      return alert("Judul dan konten tidak boleh kosong!");
-    }
+    console.log("Log 1: Tombol ditekan");
+    if (!title || !content) return alert("Isi judul dan konten");
 
     setIsSubmitting(true);
 
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Anda harus login untuk memposting.");
+      console.log("Log 2: Mengambil data user...");
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+
+      if (userError) {
+        console.log("Log 2 Error:", userError);
+        throw userError;
+      }
+      console.log("Log 3: User ditemukan", userData.user?.id);
 
       let finalImageUrl = "";
-
       if (coverFile) {
+        console.log("Log 4: Mencoba upload gambar ke bucket 'blog-images'...");
         const fileExt = coverFile.name.split(".").pop();
         const fileName = `covers/${Date.now()}.${fileExt}`;
 
-        const { error: uploadError } = await supabase.storage
+        const { data: uploadData, error: uploadError } = await supabase.storage
           .from("blog-images")
-          .upload(fileName, coverFile);
+          .upload(fileName, coverFile, {
+            upsert: true,
+          });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.log("Log 4 Error:", uploadError);
+          throw uploadError;
+        }
 
+        console.log("Log 5: Upload berhasil, mengambil URL...");
         const { data: urlData } = supabase.storage
           .from("blog-images")
           .getPublicUrl(fileName);
@@ -91,27 +108,27 @@ export default function CreateBlogPage() {
         finalImageUrl = urlData.publicUrl;
       }
 
-      const slug = title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)+/g, "");
-
+      console.log("Log 6: Mencoba insert ke tabel 'blogs'...");
       const { error: insertError } = await supabase.from("blogs").insert({
         title,
-        slug,
+        slug: generatedSlug,
         content,
         image_url: finalImageUrl,
-        author_id: user.id,
+        author_id: userData.user?.id,
         is_published: true,
       });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.log("Log 6 Error:", insertError);
+        throw insertError;
+      }
 
-      alert("Blog berhasil dipublikasikan!");
+      console.log("Log 7: SELESAI!");
+      alert("Berhasil!");
       router.push("/admin/blogs");
-      router.refresh();
-    } catch (error: any) {
-      alert(error.message);
+    } catch (err: any) {
+      console.error("DIAGNOSA ERROR:", err);
+      alert("Terjadi Kesalahan: " + (err.message || "Cek Console"));
     } finally {
       setIsSubmitting(false);
     }
@@ -120,6 +137,12 @@ export default function CreateBlogPage() {
   useEffect(() => {
     adjustHeight();
   }, [title]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   return (
     <div className="min-h-screen bg-brand-white pb-20">

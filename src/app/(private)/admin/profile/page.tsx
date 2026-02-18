@@ -6,11 +6,12 @@ import { TbEdit, TbCheck, TbX, TbLoader2 } from "react-icons/tb";
 import { BsPersonCircle } from "react-icons/bs";
 import Image from "next/image";
 import { ProfileInput } from "@/components/ProfileInput";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase";
 import { BiLogOutCircle } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
+  const supabase = createClient();
   const { profile, user, loading, refreshProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -113,27 +114,27 @@ export default function ProfilePage() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full min-h-screen pb-20">
       <div className="sticky top-0 z-10 px-10 py-8 w-full flex items-center justify-between bg-brand-white/10 backdrop-blur-sm">
-        <h1 className="text-4xl font-extrabold">Profile</h1>
+        <h1 className="text-2xl md:text-4xl font-extrabold">Profile</h1>
 
         <div className="flex gap-4">
           {isEditing ? (
             <>
               <button onClick={handleCancle} disabled={isSaving}>
-                <TbX className="text-3xl text-red-400 hover:scale-110 transition-transform" />
+                <TbX className="text-2xl md:text-3xl text-red-400 hover:scale-110 transition-transform" />
               </button>
               <button onClick={handleSave} disabled={isSaving}>
                 {isSaving ? (
-                  <TbLoader2 className="text-3xl text-green-400 animate-spin" />
+                  <TbLoader2 className="text-2xl md:text-3xl text-green-400 animate-spin" />
                 ) : (
-                  <TbCheck className="text-3xl text-green-400 hover:scale-110 transition-transform" />
+                  <TbCheck className="text-2xl md:text-3xl text-green-400 hover:scale-110 transition-transform" />
                 )}
               </button>
             </>
           ) : (
             <button onClick={() => setIsEditing(true)}>
-              <TbEdit className="text-3xl text-sky-300 hover:scale-110 transition-transform" />
+              <TbEdit className="text-2xl md:text-3xl text-sky-300 hover:scale-110 transition-transform" />
             </button>
           )}
         </div>

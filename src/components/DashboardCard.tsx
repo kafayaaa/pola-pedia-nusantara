@@ -1,6 +1,6 @@
 interface DashboardCardProps {
   icon: React.ReactNode;
-  count: number;
+  count: number | string;
   title: string;
 }
 
