@@ -11,7 +11,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Image from "@tiptap/extension-image";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase";
 
 import {
   Bold,
@@ -46,6 +46,7 @@ export default function SimpleEditor({
   content: string;
   onChange: (val: string) => void;
 }) {
+  const supabase = createClient();
   const editor = useEditor({
     extensions: [
       StarterKit.configure({

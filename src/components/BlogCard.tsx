@@ -24,7 +24,7 @@ export default function BlogCard({
   return (
     <Link
       href={`/admin/blogs/${slug}`}
-      className="w-full p-5 flex items-center gap-5 rounded-lg bg-white shadow-md"
+      className="w-full p-5 flex flex-col md:flex-row items-center gap-5 rounded-lg bg-white shadow-md"
     >
       <div className="">
         <Image
@@ -32,7 +32,7 @@ export default function BlogCard({
           alt={title}
           width={200}
           height={200}
-          className="aspect-square size-40 object-cover"
+          className="aspect-square md:size-40 object-cover"
         />
       </div>
       <div className="flex flex-col gap-3">

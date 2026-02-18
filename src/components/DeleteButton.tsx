@@ -1,7 +1,7 @@
 "use client";
 
 import { IoTrashBin } from "react-icons/io5";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -12,6 +12,7 @@ export default function DeleteButton({
   blogId: string;
   imageUrl: string | null;
 }) {
+  const supabase = createClient();
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -54,7 +55,7 @@ export default function DeleteButton({
       disabled={isDeleting}
       className={`${isDeleting ? "opacity-50 cursor-not-allowed" : "hover:scale-110"} transition-transform`}
     >
-      <IoTrashBin className="text-brand-light-red text-3xl" />
+      <IoTrashBin className="text-brand-light-red text-xl md:text-3xl" />
     </button>
   );
 }

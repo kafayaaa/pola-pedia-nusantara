@@ -1,4 +1,6 @@
+"use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface NavButtonProps {
   text: string;
@@ -6,14 +8,23 @@ interface NavButtonProps {
 }
 
 export default function NavButton({ text, href }: NavButtonProps) {
+  const pathname = usePathname();
+
+  const isActive = pathname === href;
+
   return (
-    <li className="min-w-20 flex justify-center items-center">
+    <div className="min-w-20 flex justify-center items-center">
       <Link
         href={href}
-        className="tracking-wide hover:tracking-normal hover:text-brand-light-red hover:font-extrabold transition-all duration-300 ease-in-out"
+        className={`tracking-wide transition-all duration-300 ease-in-out hover:tracking-normal hover:text-brand-light-red hover:font-extrabold 
+          ${
+            isActive
+              ? "text-brand-light-red font-extrabold tracking-normal"
+              : "text-brand-white"
+          }`}
       >
         {text}
       </Link>
-    </li>
+    </div>
   );
 }

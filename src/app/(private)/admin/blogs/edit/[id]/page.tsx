@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect, useRef, DragEvent } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase";
 import { useRouter, useParams } from "next/navigation";
 import SimpleEditor from "@/components/SimpleEditor";
 import { Image as ImageIcon, Loader2, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function EditBlogPage() {
+  const supabase = createClient();
   const router = useRouter();
   const { id } = useParams();
 
@@ -229,7 +230,7 @@ export default function EditBlogPage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title"
-          className="w-full text-5xl font-bold font-serif outline-none mb-6 resize-none overflow-hidden"
+          className="w-full text-2xl md:text-5xl font-bold outline-none mb-6 resize-none overflow-hidden"
           rows={1}
         />
 
