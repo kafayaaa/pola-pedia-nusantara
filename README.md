@@ -1,5 +1,8 @@
 <div align="center">
-  <img src="" alt="Polapedia Logo" width="120" />
+  <div align="center" style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+  <img src="./public/logo.webp" alt="ShutterUp Logo" width="150" style="margin-bottom: 10px;">
+  <h1 style="border-bottom: none; margin-bottom: 20px;">ShutterUp</h1>
+</div>
   <h1>Polapedia Nusantara</h1>
   <p>A Modern Blog CMS Platform built with Next.js 15 and Supabase for dynamic and responsive content management.</p>
 
@@ -98,4 +101,4 @@ Developed with ❤️ by Polapedia Team
   * **Security Focus**: Highlights the Row Level Security (RLS) setup, which is a major technical achievement of your project.
   * **Type Safety**: Mentions TypeScript readiness, which is crucial for modern enterprise deployments.
 
-**Would you like me to add a "Troubleshooting" section specifically for the Storage RLS or Middleware setup we solved e
+**Would you like me to add a "Troubleshooting" section specifically for the Storage RLS or Middleware setup we solved earlier?**
