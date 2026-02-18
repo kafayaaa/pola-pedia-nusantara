@@ -5,10 +5,12 @@ import { createClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import SimpleEditor from "@/components/SimpleEditor";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function CreateBlogPage() {
   const supabase = createClient();
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -33,21 +35,13 @@ export default function CreateBlogPage() {
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCoverFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-  };
-
   const handleFiles = (files: FileList | null) => {
     const file = files?.[0];
     if (file && file.type.startsWith("image/")) {
       setCoverFile(file);
       setPreviewUrl(URL.createObjectURL(file));
     } else {
-      alert("Tolong unggah file gamber yang valid.");
+      alert("Tolong unggah file gambar yang valid.");
     }
   };
 
@@ -56,9 +50,7 @@ export default function CreateBlogPage() {
     setIsDragging(true);
   };
 
-  const onDragLeave = () => {
-    setIsDragging(false);
-  };
+  const onDragLeave = () => setIsDragging(false);
 
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
@@ -67,40 +59,28 @@ export default function CreateBlogPage() {
   };
 
   const handlePublish = async () => {
-    console.log("Log 1: Tombol ditekan");
     if (!title || !content) return alert("Isi judul dan konten");
+
+    if (!user) {
+      return alert("Sesi anda berakhir. Silakan login kembali.");
+    }
 
     setIsSubmitting(true);
 
     try {
-      console.log("Log 2: Mengambil data user...");
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-
-      if (userError) {
-        console.log("Log 2 Error:", userError);
-        throw userError;
-      }
-      console.log("Log 3: User ditemukan", userData.user?.id);
-
       let finalImageUrl = "";
+
       if (coverFile) {
-        console.log("Log 4: Mencoba upload gambar ke bucket 'blog-images'...");
+        console.log("Log 4: Uploading image...");
         const fileExt = coverFile.name.split(".").pop();
-        const fileName = `covers/${Date.now()}.${fileExt}`;
+        const fileName = `covers/${user.id}-${Date.now()}.${fileExt}`;
 
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from("blog-images")
-          .upload(fileName, coverFile, {
-            upsert: true,
-          });
+          .upload(fileName, coverFile);
 
-        if (uploadError) {
-          console.log("Log 4 Error:", uploadError);
-          throw uploadError;
-        }
+        if (uploadError) throw uploadError;
 
-        console.log("Log 5: Upload berhasil, mengambil URL...");
         const { data: urlData } = supabase.storage
           .from("blog-images")
           .getPublicUrl(fileName);
@@ -108,27 +88,23 @@ export default function CreateBlogPage() {
         finalImageUrl = urlData.publicUrl;
       }
 
-      console.log("Log 6: Mencoba insert ke tabel 'blogs'...");
+      console.log("Log 6: Inserting blog...");
       const { error: insertError } = await supabase.from("blogs").insert({
         title,
         slug: generatedSlug,
         content,
         image_url: finalImageUrl,
-        author_id: userData.user?.id,
+        author_id: user.id,
         is_published: true,
       });
 
-      if (insertError) {
-        console.log("Log 6 Error:", insertError);
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
-      console.log("Log 7: SELESAI!");
-      alert("Berhasil!");
+      alert("Blog berhasil diterbitkan!");
       router.push("/admin/blogs");
     } catch (err: any) {
       console.error("DIAGNOSA ERROR:", err);
-      alert("Terjadi Kesalahan: " + (err.message || "Cek Console"));
+      alert("Gagal: " + (err.message || "Terjadi kesalahan database"));
     } finally {
       setIsSubmitting(false);
     }
@@ -144,6 +120,9 @@ export default function CreateBlogPage() {
     };
   }, [previewUrl]);
 
+  if (authLoading)
+    return <div className="p-10 text-center">Memuat Sesi...</div>;
+
   return (
     <div className="min-h-screen bg-brand-white pb-20">
       <div className="sticky top-0 z-10 bg-brand-white/10 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex justify-between items-center">
@@ -155,7 +134,7 @@ export default function CreateBlogPage() {
           disabled={isSubmitting}
           className="bg-brand-light-red text-white px-6 py-2 rounded-full font-bold hover:brightness-110 disabled:opacity-50 flex items-center gap-2"
         >
-          {isSubmitting && <Loader2 className="animate-spin" size={18} />}
+          {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : null}
           {isSubmitting ? "Publishing..." : "Publish"}
         </button>
       </div>
@@ -168,7 +147,7 @@ export default function CreateBlogPage() {
             onDrop={onDrop}
             className={`relative group cursor-pointer block w-full h-64 border-2 border-dashed rounded-2xl overflow-hidden transition-all duration-200 ${
               isDragging
-                ? "border-brand-light-red bg-red-50 scale-[1.02]"
+                ? "border-brand-light-red bg-red-50 scale-[1.01]"
                 : "border-gray-200 bg-gray-50 hover:border-gray-400"
             }`}
           >
@@ -179,28 +158,20 @@ export default function CreateBlogPage() {
                   alt="Preview"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <span className="text-white font-medium bg-black/50 px-4 py-2 rounded-full text-sm">
-                    Ganti Gambar (Drop di sini)
+                    Ganti Gambar
                   </span>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-gray-400 group-hover:text-gray-600 transition-colors">
-                <div
-                  className={`p-4 rounded-full mb-2 transition-transform ${isDragging ? "scale-125 text-brand-light-red" : ""}`}
-                >
-                  <ImageIcon size={48} strokeWidth={1} />
-                </div>
+              <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                <ImageIcon size={48} strokeWidth={1} className="mb-2" />
                 <span className="font-medium">
-                  {isDragging
-                    ? "Lepaskan untuk unggah"
-                    : "Klik atau seret gambar ke sini"}
+                  Klik atau seret gambar ke sini
                 </span>
-                <p className="text-xs mt-1 text-gray-400">PNG, JPG up to 5MB</p>
               </div>
             )}
-
             <input
               type="file"
               className="hidden"
@@ -216,8 +187,7 @@ export default function CreateBlogPage() {
           rows={1}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full text-5xl font-bold placeholder:text-gray-200 outline-none mb-6 resize-none border-none focus:ring-0 overflow-hidden min-h-[60px]"
-          style={{ lineHeight: "1.2" }}
+          className="w-full text-4xl md:text-5xl font-bold placeholder:text-gray-200 outline-none mb-6 resize-none border-none focus:ring-0 overflow-hidden"
         />
 
         <SimpleEditor content={content} onChange={setContent} />

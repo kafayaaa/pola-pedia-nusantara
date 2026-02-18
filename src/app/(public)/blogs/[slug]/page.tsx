@@ -6,7 +6,22 @@ import { FaArrowLeft } from "react-icons/fa6";
 
 const supabase = createClient();
 
-async function getBlog(slug: string) {
+interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  image_url: string | null;
+  created_at: string;
+  is_published: boolean;
+  profiles?: {
+    username: string;
+    full_name: string;
+    avatar_url: string;
+  };
+}
+
+async function getBlog(slug: string): Promise<Blog | null> {
   const { data, error } = await supabase
     .from("blogs")
     .select(`*, profiles (username, full_name, avatar_url)`)
@@ -17,7 +32,7 @@ async function getBlog(slug: string) {
   return data;
 }
 
-async function getMoreBlogs(currentId: string) {
+async function getMoreBlogs(currentId: string): Promise<Blog[]> {
   const { data } = await supabase
     .from("blogs")
     .select("*")
