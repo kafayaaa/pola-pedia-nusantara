@@ -1,9 +1,15 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { createClient } from "@/lib/supabase";
 import { UserProfile } from "@/types/userType";
-import { User } from "@supabase/supabase-js";
+import { User, Session, AuthChangeEvent } from "@supabase/supabase-js";
 
 interface AuthContextType {
   user: User | null;
@@ -25,60 +31,74 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
-  const fetchProfile = async (userId: string, userEmail: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+  const fetchProfile = useCallback(
+    async (userId: string, userEmail: string) => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .single();
 
-      if (!error && data) {
-        // Gabungkan data profil dengan email dari auth
-        setProfile({ ...data, email: userEmail });
+        if (!error && data) {
+          setProfile({ ...data, email: userEmail });
+        } else {
+          setProfile(null);
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        setProfile(null);
       }
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      setProfile(null);
-    }
-  };
+    },
+    [supabase],
+  );
 
   useEffect(() => {
     const initializeAuth = async () => {
-      setLoading(true);
+      try {
+        setLoading(true);
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-
-      if (currentUser) {
-        await fetchProfile(currentUser.id, currentUser.email!);
+        if (session?.user) {
+          setUser(session.user);
+          await fetchProfile(session.user.id, session.user.email!);
+        } else {
+          setUser(null);
+          setProfile(null);
+        }
+      } catch (error) {
+        console.error("Init error", error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     initializeAuth();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
+    } = supabase.auth.onAuthStateChange(
+      async (event: AuthChangeEvent, session: Session | null) => {
+        const currentUser = session?.user ?? null;
 
-      if (currentUser) {
-        await fetchProfile(currentUser.id, currentUser.email!);
-      } else {
-        setProfile(null);
-      }
+        setUser(currentUser);
 
-      setLoading(false);
-    });
+        if (currentUser) {
+          await fetchProfile(currentUser.id, currentUser.email!);
+        } else {
+          setProfile(null);
+        }
 
-    return () => subscription.unsubscribe();
-  }, []);
+        setLoading(false);
+      },
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase, fetchProfile]);
 
   const refreshProfile = async () => {
     if (user) await fetchProfile(user.id, user.email!);
