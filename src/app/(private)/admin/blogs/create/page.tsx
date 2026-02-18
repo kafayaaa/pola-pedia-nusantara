@@ -77,9 +77,16 @@ export default function CreateBlogPage() {
 
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from("blog-images")
-          .upload(fileName, coverFile);
+          .upload(fileName, coverFile, {
+            contentType: coverFile.type,
+            cacheControl: "3600",
+            upsert: true,
+          });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error("DIAGNOSA ERROR:", uploadError);
+          throw uploadError;
+        }
 
         const { data: urlData } = supabase.storage
           .from("blog-images")
