@@ -1,7 +1,7 @@
 <div align="center">
   <div align="center" style="display: flex; align-items: center; justify-content: center; gap: 15px;">
   <img src="./public/logo.webp" alt="ShutterUp Logo" width="150" style="margin-bottom: 10px;">
-  <h1 style="border-bottom: none; margin-bottom: 20px;">ShutterUp</h1>
+  <h1 style="border-bottom: none; margin-bottom: 20px;">Pola Pedia Nusantara</h1>
 </div>
   <h1>Polapedia Nusantara</h1>
   <p>A Modern Blog CMS Platform built with Next.js 15 and Supabase for dynamic and responsive content management.</p>
@@ -89,7 +89,7 @@ Authors can only edit or delete blogs that they own.
 This project is licensed under the MIT License.
 
 <div align="center">
-Developed with ❤️ by Polapedia Team
+Developed with ❤️ by Kafayaaa
 </div>
 
 
